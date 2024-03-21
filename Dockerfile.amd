@@ -24,18 +24,17 @@ RUN /venv/bin/conda-unpack
 # for us.
 FROM debian:buster AS runtime
 
-# Copy /venv from the previous stage:
-# COPY --from=build /venv /venv
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install common OS level dependencies
 RUN apt-get update && \
     apt-get install -y rsync && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6
-
-# Copy /venv from the previous stage
+# Copy /venv from the previous stage:
 COPY --from=build /venv /venv
+
+# Install common OS level dependencies
+RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6
 
 # Copy weights /code/weights
 COPY weights /code/weights

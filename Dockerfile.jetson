@@ -24,8 +24,7 @@ RUN /venv/bin/conda-unpack
 # for us.
 FROM nvcr.io/nvidia/l4t-base:r32.4.3 AS runtime
 
-# Install common OS level dependencies
-RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y rsync && \
@@ -33,6 +32,9 @@ RUN apt-get update && \
 
 # Copy /venv from the previous stage
 COPY --from=build /venv /venv
+
+# Install common OS level dependencies
+RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6
 
 # Copy weights /code/weights
 COPY weights /code/weights
@@ -42,9 +44,14 @@ RUN --mount=target=/ctx rsync -r --exclude='weights' /ctx/ /code/
 
 WORKDIR /code/
 
+# install onnxruntime-gpu 1.11.0 from Jetson zoo
 ADD https://nvidia.box.com/shared/static/2sv2fv1wseihaw8ym0d4srz41dzljwxh.whl onnxruntime_gpu-1.11.0-cp38-cp38-linux_aarch64.whl
 
-RUN /bin/bash -c "source /venv/bin/activate && pip install onnxruntime_gpu-1.11.0-cp38-cp38-linux_aarch64.whl"
+RUN /bin/bash -c "source /venv/bin/activate && pip install onnxruntime_gpu-1.11.0-cp38-cp38-linux_aarch64.whl && rm *.whl"
+
+# When image is run, run the code with the environment
+# activated:
+# SHELL ["/bin/bash", "-c"]
 
 # ENTRYPOINT source /venv/bin/activate && \
 #            python webcam_object_detection.py
