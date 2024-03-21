@@ -26,15 +26,15 @@ FROM nvcr.io/nvidia/l4t-base:r32.4.3 AS runtime
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install common OS level dependencies
+RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6
+
 RUN apt-get update && \
     apt-get install -y rsync && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy /venv from the previous stage
 COPY --from=build /venv /venv
-
-# Install common OS level dependencies
-RUN apt-get update && apt-get -y install ffmpeg libsm6 libxext6
 
 # Copy weights /code/weights
 COPY weights /code/weights

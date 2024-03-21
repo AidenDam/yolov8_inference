@@ -68,7 +68,7 @@ class YOLOv8:
         scores = scores[scores > self.conf_threshold]
 
         if len(scores) == 0:
-            return [], [], []
+            return np.array([]), np.array([]), np.array([])
 
         # Get the class with the highest confidence
         class_ids = np.argmax(predictions[:, 4:], axis=1)
@@ -102,10 +102,10 @@ class YOLOv8:
         boxes *= np.array([self.img_width, self.img_height, self.img_width, self.img_height])
         return boxes
 
-    def draw_detections(self, image, draw_scores=True, mask_alpha=0.4):
+    def draw_detections(self, image, mask_alpha=0.4):
 
         return draw_detections(image, self.boxes, self.scores,
-                               self.class_ids, mask_alpha)
+                               self.class_ids, mask_alpha=mask_alpha)
 
     def get_input_details(self):
         model_inputs = self.session.get_inputs()
@@ -123,7 +123,7 @@ class YOLOv8:
 if __name__ == '__main__':
     from imread_from_url import imread_from_url
 
-    model_path = "../models/yolov8m.onnx"
+    model_path = "../models/yolov8n.onnx"
 
     # Initialize YOLOv8 object detector
     yolov8_detector = YOLOv8(model_path, conf_thres=0.3, iou_thres=0.5)

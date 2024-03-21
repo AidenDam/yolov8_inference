@@ -85,7 +85,7 @@ def xywh2xyxy(x):
     return y
 
 
-def draw_detections(image, boxes, scores, class_ids, mask_alpha=0.3):
+def draw_detections(image, boxes, scores, class_ids, ids=[], mask_alpha=0.3):
     det_img = image.copy()
 
     img_height, img_width = image.shape[:2]
@@ -95,14 +95,24 @@ def draw_detections(image, boxes, scores, class_ids, mask_alpha=0.3):
     det_img = draw_masks(det_img, boxes, class_ids, mask_alpha)
 
     # Draw bounding boxes and labels of detections
-    for class_id, box, score in zip(class_ids, boxes, scores):
-        color = colors[class_id]
+    if len(ids) > 0:
+        for id_, class_id, box, score in zip(ids, class_ids, boxes, scores):
+            color = colors[class_id]
 
-        draw_box(det_img, box, color)
+            draw_box(det_img, box, color)
 
-        label = class_names[class_id]
-        caption = f'{label} {int(score * 100)}%'
-        draw_text(det_img, caption, box, color, font_size, text_thickness)
+            label = class_names[class_id]
+            caption = f'{id_} {label} {int(score * 100)}%'
+            draw_text(det_img, caption, box, color, font_size, text_thickness)
+    else:
+        for class_id, box, score in zip(class_ids, boxes, scores):
+            color = colors[class_id]
+
+            draw_box(det_img, box, color)
+
+            label = class_names[class_id]
+            caption = f'{label} {int(score * 100)}%'
+            draw_text(det_img, caption, box, color, font_size, text_thickness)
 
     return det_img
 
