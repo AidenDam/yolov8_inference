@@ -2,8 +2,8 @@
 FROM condaforge/mambaforge AS build
 
 # Install the package as normal:
-COPY environment.yml .
-RUN mamba env create -f environment.yml
+COPY environment_jetson.yml .
+RUN mamba env create -f environment_jetson.yml
 
 # Install conda-pack:
 RUN mamba install -c conda-forge conda-pack

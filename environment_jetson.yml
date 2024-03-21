@@ -7,4 +7,3 @@ dependencies:
   - pip
   - pip:
     - opencv-python==4.7.0.72
-    - onnxruntime-gpu==1.14.1
