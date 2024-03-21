@@ -1,5 +1,7 @@
 numpy<1.23
 opencv-python
-imread-from-url
 onnxruntime-gpu
 cap-from-youtube
+imread-from-url
+scipy
+lap
