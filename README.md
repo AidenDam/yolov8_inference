@@ -64,6 +64,8 @@ model.export(format="onnx", imgsz=[480,640])
 DOCKER_BUILDKIT=1 docker build -t <image_name> -f Dockerfile.amd .
 ```
 **ARM platform or build in Jetson:**
+
+If you don't use Jetson, you need change the base runtime image to ```debian:buster``` or another image.
 ```bash
 DOCKER_BUILDKIT=1 docker build -t <image_name> -f Dockerfile.jetson .
 ```
@@ -102,8 +104,23 @@ source /venv/bin/activate && python webcam_object_detection.py
     --gpus all \
     aiden827/yolov8_onnx:jetson
   ```
+* When you use TensorRT to load ONNX model, you should add 2 environment variables ```ORT_TENSORRT_ENGINE_CACHE_ENABLE=1``` and ```ORT_TENSORRT_CACHE_PATH="/code/cache"``` to cache the loaded model from first load, and improve it for next load.\
+  *Example run docker container in Jetson:*
+  ```bash
+  docker run -it --rm \
+    --device /dev/video0:/dev/video0 \
+    --env DISPLAY=$DISPLAY \
+    --env ORT_TENSORRT_ENGINE_CACHE_ENABLE=1 \
+    --env ORT_TENSORRT_CACHE_PATH="/code/cache" \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v $(pwd):/code \
+    --runtime nvidia \
+    --gpus all \
+    aiden827/yolov8_onnx:jetson
+  ```
 
 # References:
 * YOLOv8 model: [https://github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
 * Jetson zoo: [https://elinux.org/Jetson_Zoo](https://elinux.org/Jetson_Zoo)
 * ONNX-YOLOv8-Object-Detection: [https://github.com/ibaiGorordo/ONNX-YOLOv8-Object-Detection](https://github.com/ibaiGorordo/ONNX-YOLOv8-Object-Detection/tree/main)
+* TensorRT Execution Provider: [https://onnxruntime.ai/docs/execution-providers/TensorRT-ExecutionProvider.html](https://onnxruntime.ai/docs/execution-providers/TensorRT-ExecutionProvider.html)

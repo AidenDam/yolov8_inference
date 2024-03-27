@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - python=3.8
-  - conda-forge::gxx_linux-64
+  - conda-forge::gxx_linux-aarch64
   - pip
   - numpy<1.23
   - pip:
