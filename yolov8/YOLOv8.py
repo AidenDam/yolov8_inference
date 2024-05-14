@@ -47,7 +47,7 @@ class YOLOv8:
         # Scale input pixel values to 0 to 1
         input_img = input_img / 255.0
         input_img = input_img.transpose(2, 0, 1)
-        input_tensor = input_img[np.newaxis, :, :, :].astype(np.float32)
+        input_tensor = input_img[np.newaxis, :, :, :].astype(np.float16)
 
         return input_tensor
 

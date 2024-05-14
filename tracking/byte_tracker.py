@@ -12,7 +12,7 @@ class STrack(BaseTrack):
         self._tlwh = np.asarray(tlwh, dtype=np.float)
         self.kalman_filter = None
         self.mean, self.covariance = None, None
-        self.is_activated = False
+        self.is_activated = True
 
         self.score = score
         self.class_id = class_id
